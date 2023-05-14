@@ -1,48 +1,68 @@
-function getRandomNumber() {
+ function getRandomNumber() {
     return Math.floor(Math.random() * 10) % 3; //the number will be between 0 and 2 because we used modulo 3
-}
-function getComputerChoice() {
+  }
+  
+  function getComputerChoice() {
     const choices = ['rock', 'paper', 'scissors'];
     return choices[getRandomNumber()];
-}
-function playRound(playerSelection,computerSelection){
+  }
+  
+  function playRound(playerSelection, computerSelection) {
     playerSelection = playerSelection.toLowerCase();
-    if (playerSelection === 'rock' && computerSelection === 'scissors' ||
-    playerSelection === 'scissors' && computerSelection === 'paper' ||
-    playerSelection === 'paper' && computerSelection === 'rock') //win
-    return 2
-    else if (playerSelection === computerSelection) return 1 //draw
-    else return 0 //loss
-    }
-function game() {
-    let computerScore = 0;
-    let playerScore = 0;
-    for (let i=0 ; i<5 ; i++){
-        let playerChoice = prompt('choose your weapon');
-        let computerChoice = getComputerChoice();
-        if (playRound(playerChoice, computerChoice) === 0) {
-            computerScore++;
-            console.log (`you lose, ${playerChoice} is beaten by ${computerChoice}`)   
-        }
-        else if (playRound(playerChoice, computerChoice) === 2) {
-            playerScore++;
-            console.log (`you win ${playerChoice} beats ${computerChoice}`)
-        }
-        else {
-            playerScore += 0.5;
-            computerScore += 0.5;
-            console.log (`draw, you both chose ${playerChoice}`)
-        }
-    }
-    if (computerScore > playerScore) {
-        console.log(`you lost the game ${computerScore} to ${playerScore}`);
-    } 
-    else if (computerScore < playerScore) {
-        console.log(`you won the game ${computerScore} to ${playerScore}`);
-    }
-    else {
-        console.log(`the game is drawn ${computerScore} to ${playerScore}`);
-    }
+    const result = document.getElementById('result');
 
-}
-game();
+    switch(`${playerSelection}-${computerSelection}`) {
+      case 'rock-scissors':
+      case 'paper-rock':
+      case 'scissors-paper':
+        result.textContent = 'WIN';
+        playerScore++;
+        break;
+      case 'rock-paper':
+      case 'paper-scissors':
+      case 'scissors-rock':
+        result.textContent = 'LOSS';
+        computerScore++;
+        break;
+      default:
+        result.textContent = 'DRAW';
+        break;
+    }
+    
+    document.getElementById('player-score').textContent = playerScore;
+    document.getElementById('computer-score').textContent = computerScore;
+    
+    if (playerScore === 5) {
+      result.textContent = 'You win!';
+      disableButtons();
+    } else if (computerScore === 5) {
+      result.textContent = 'Computer wins!';
+      disableButtons();
+    }
+  }
+  
+  function disableButtons() {
+    rockButton.disabled = true;
+    paperButton.disabled = true;
+    scissorsButton.disabled = true;
+  }
+  
+  let playerScore = 0;
+  let computerScore = 0;
+  
+  const rockButton = document.querySelector('#rock');
+  const paperButton = document.querySelector('#paper');
+  const scissorsButton = document.querySelector('#scissors');
+  
+  rockButton.addEventListener('click', () => {
+    playRound('rock', getComputerChoice());
+  });
+  
+  paperButton.addEventListener('click', () => {
+    playRound('paper', getComputerChoice());
+  });
+  
+  scissorsButton.addEventListener('click', () => {
+    playRound('scissors', getComputerChoice());
+  });
+  
